@@ -1,10 +1,9 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CreateUrlDto } from "./dto/create-url.dto";
 import { UpdateUrlDto } from "./dto/update-url.dto";
 import { UidService } from "src/services/uid/uid.service";
 import { PrismaService } from "src/database/prisma.service";
 import { ConfigService } from "@nestjs/config";
-import { Response } from "express";
 @Injectable()
 export class UrlService {
   private host: string;
@@ -49,12 +48,20 @@ export class UrlService {
       },
     });
   }
-
-  update(uid: number, updateUrlDto: UpdateUrlDto) {
-    return `This action updates a #${uid} url`;
+  async update(id: number, updateUrlDto: UpdateUrlDto) {
+    return await this.prismaService.url.update({
+      where: {
+        id,
+      },
+      data: updateUrlDto,
+    });
   }
 
-  remove(uid: number) {
-    return `This action removes a #${uid} url`;
+  async remove(id: number) {
+    return await this.prismaService.url.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

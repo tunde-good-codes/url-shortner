@@ -13,7 +13,7 @@ import { CreateUrlDto } from "./dto/create-url.dto";
 import { UpdateUrlDto } from "./dto/update-url.dto";
 import type { Response } from "express";
 import { UrlExistsPipe } from "./pipes/url-exists/url-exists.pipe";
-import type{ Url } from "@prisma/client";
+import type { Url } from "@prisma/client";
 
 @Controller()
 export class UrlController {
@@ -33,14 +33,16 @@ export class UrlController {
   findOne(@Param("uid", UrlExistsPipe) url: Url, @Res() res: Response) {
     res.redirect(url.redirect);
   }
-
-  @Patch(":uid")
-  update(@Param("uid") uid: string, @Body() updateUrlDto: UpdateUrlDto) {
-    return this.urlService.update(+uid, updateUrlDto);
+  @Patch("url/:uid")
+  update(
+    @Param("uid", UrlExistsPipe) url: Url,
+    @Body() updateUrlDto: UpdateUrlDto,
+  ) {
+    return this.urlService.update(url.id, updateUrlDto);
   }
 
-  @Delete(":uid")
-  remove(@Param("uid") uid: string) {
-    return this.urlService.remove(+uid);
+  @Delete("url/:uid")
+  remove(@Param("uid", UrlExistsPipe) url: Url) {
+    return this.urlService.remove(url.id);
   }
 }
