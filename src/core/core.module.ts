@@ -5,9 +5,10 @@ import config from "../config";
 import { TransformResponseInterceptor } from "./interceptors/transform-response/transform-response.interceptor";
 import { LoggerService } from "./logger/logger-service";
 import { LoggerMiddleware } from "./middleware/logger/logger.middleware";
-import { DatabaseService } from "../database/database.service";
+import { PrismaService } from "../database/prisma.service";
 import { CacheService } from "./cache/cache.service";
 import { RedisModule } from "./redis/redis.module";
+import { DatabaseModule } from "src/database/databse.module";
 
 @Global()
 @Module({
@@ -17,6 +18,7 @@ import { RedisModule } from "./redis/redis.module";
       isGlobal: true,
     }),
     RedisModule,
+    DatabaseModule,
   ],
   providers: [
     {
@@ -24,10 +26,10 @@ import { RedisModule } from "./redis/redis.module";
       useClass: TransformResponseInterceptor,
     },
     LoggerService,
-    DatabaseService,
+    PrismaService,
     CacheService,
   ],
-  exports: [LoggerService, DatabaseService, CacheService],
+  exports: [LoggerService, PrismaService, CacheService],
 })
 export class CoreModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

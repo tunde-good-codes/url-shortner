@@ -3,7 +3,7 @@ import { AppService } from "./app.service";
 import { CoreModule } from "./core/core.module";
 import { LoggerService } from "./core/logger/logger-service";
 import { createMock, DeepMocked } from "@golevelup/ts-jest";
-import { DatabaseService } from "./database/database.service";
+import { DatabaseService } from "./database/prisma.service";
 import { CacheService } from "./core/cache/cache.service";
 import { mockDeep } from "jest-mock-extended";
 describe("AppService", () => {
