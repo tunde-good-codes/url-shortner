@@ -9,6 +9,8 @@ import { PrismaService } from "../database/prisma.service";
 import { CacheService } from "./cache/cache.service";
 import { RedisModule } from "./redis/redis.module";
 import { DatabaseModule } from "src/database/databse.module";
+import { UrlModule } from "src/modules/url/url.module";
+import { UidModule } from "src/services/uid/uid.module";
 
 @Global()
 @Module({
@@ -19,6 +21,9 @@ import { DatabaseModule } from "src/database/databse.module";
     }),
     RedisModule,
     DatabaseModule,
+
+    UrlModule,
+    UidModule,
   ],
   providers: [
     {
