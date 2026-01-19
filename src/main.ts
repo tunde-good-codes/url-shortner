@@ -8,7 +8,12 @@ async function bootstrap() {
   app.use(helmet());
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // weed away or does'nt allow ppt  not in payloadF
+      transform: true, // CRITICAL: Enables automatic type transformation
+      transformOptions: {
+        enableImplicitConversion: true, // Helps with query params
+      },
+      whitelist: true,
+      forbidNonWhitelisted: false, // Set to false for query params
     }),
   );
   app.useLogger(app.get(LoggerService));

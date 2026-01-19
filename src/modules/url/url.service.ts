@@ -4,6 +4,7 @@ import { UpdateUrlDto } from "./dto/update-url.dto";
 import { UidService } from "src/services/uid/uid.service";
 import { PrismaService } from "src/database/prisma.service";
 import { ConfigService } from "@nestjs/config";
+import { FilterUrlsDto } from "./dto/get-url-dto";
 @Injectable()
 export class UrlService {
   private host: string;
@@ -35,8 +36,37 @@ export class UrlService {
     return url;
   }
 
-  findAll() {
-    return this.prismaService.url.findMany();
+  async findAll({ page = 1, limit = 10, filter }: FilterUrlsDto) {
+    const skip = (page - 1) * limit;
+    const whereClause = filter
+      ? {
+          OR: [
+            { title: { contains: filter } },
+            { description: { contains: filter } },
+            { redirect: { contains: filter } },
+            { url: { contains: filter } },
+          ],
+        }
+      : {};
+    const data = await this.prismaService.url.findMany({
+      where: whereClause,
+      skip,
+      take: limit,
+    });
+    const totalCount = await this.prismaService.url.count({
+      where: whereClause,
+    });
+
+    const meta = {
+      totalCount,
+      currentPage: page,
+      perPage: limit,
+      totalPages: Math.ceil(totalCount / limit),
+      hasNextPage: skip + limit < totalCount,
+      hasPreviousPage: skip > 0 && page > 1,
+    };
+
+    return { data, meta };
   }
 
   async findOne(uid: string) {

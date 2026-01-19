@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Res,
+  Query,
 } from "@nestjs/common";
 import { UrlService } from "./url.service";
 import { CreateUrlDto } from "./dto/create-url.dto";
@@ -14,6 +15,7 @@ import { UpdateUrlDto } from "./dto/update-url.dto";
 import type { Response } from "express";
 import { UrlExistsPipe } from "./pipes/url-exists/url-exists.pipe";
 import type { Url } from "@prisma/client";
+import { FilterUrlsDto } from "./dto/get-url-dto";
 
 @Controller()
 export class UrlController {
@@ -23,10 +25,9 @@ export class UrlController {
   create(@Body() createUrlDto: CreateUrlDto) {
     return this.urlService.create(createUrlDto);
   }
-
   @Get("url")
-  findAll() {
-    return this.urlService.findAll();
+  findAll(@Query() queryParams: FilterUrlsDto) {
+    return this.urlService.findAll(queryParams);
   }
 
   @Get(":uid")
@@ -36,7 +37,7 @@ export class UrlController {
   @Patch("url/:uid")
   update(
     @Param("uid", UrlExistsPipe) url: Url,
-    @Body() updateUrlDto: UpdateUrlDto,
+    @Body() updateUrlDto: UpdateUrlDto
   ) {
     return this.urlService.update(url.id, updateUrlDto);
   }
