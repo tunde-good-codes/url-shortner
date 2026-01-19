@@ -36,7 +36,7 @@ export class UrlService {
   }
 
   findAll() {
-    return `This action returns all url`;
+    return this.prismaService.url.findMany();
   }
 
   async findOne(uid: string) {
