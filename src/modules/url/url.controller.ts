@@ -8,6 +8,7 @@ import {
   Delete,
   Res,
   Query,
+  UseGuards,
 } from "@nestjs/common";
 import { UrlService } from "./url.service";
 import { CreateUrlDto } from "./dto/create-url.dto";
@@ -16,8 +17,10 @@ import type { Response } from "express";
 import { UrlExistsPipe } from "./pipes/url-exists/url-exists.pipe";
 import type { Url } from "@prisma/client";
 import { FilterUrlsDto } from "./dto/get-url-dto";
+import { AuthGuard } from "src/auth/auth.guard";
 
 @Controller()
+@UseGuards(AuthGuard)
 export class UrlController {
   constructor(private readonly urlService: UrlService) {}
 
